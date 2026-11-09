@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<ScrollPane fx:id="diagnosticScreen" xmlns:fx="http://javafx.com/fxml" fx:controller="com.grupo05.cnn_b.DiagnosisController" fitToWidth="true" hbarPolicy="NEVER" styleClass="screen-scroll" minWidth="0" minHeight="0">
+  <VBox fx:id="screenContent" spacing="18" styleClass="content">
+    <VBox fx:id="screenHeading" spacing="6"><Label text="01 · DIAGNÓSTICO" styleClass="eyebrow,cyan"/><Label text="Diagnóstico de ecografía" styleClass="page-title"/><Label text="Cargue una imagen, ejecute el modelo y revise la probabilidad de cada clase." styleClass="body" wrapText="true"/></VBox>
+    <GridPane fx:id="cards" hgap="20" vgap="20">
+      <columnConstraints><ColumnConstraints percentWidth="58" hgrow="ALWAYS"/><ColumnConstraints percentWidth="42" hgrow="ALWAYS"/></columnConstraints>
+      <VBox fx:id="imageCard" styleClass="diagnostic-card" minWidth="0" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.valignment="TOP">
+        <HBox fx:id="imageHeading" spacing="12" alignment="CENTER_LEFT" styleClass="card-heading"><Label text="Ecografía" styleClass="section-title" minWidth="-Infinity"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="fileChip" styleClass="file-chip" wrapText="true" minWidth="0" maxWidth="260" visible="false" managed="false"/><Button fx:id="removeButton" text="Quitar imagen" styleClass="ghost,small" onAction="#reset" minWidth="-Infinity" visible="false" managed="false"/></HBox>
+        <StackPane fx:id="imageArea" styleClass="image-area" VBox.vgrow="ALWAYS" onDragOver="#dragOver" onDragExited="#dragExited" onDragDropped="#dragDropped">
+          <VBox fx:id="emptyDrop" alignment="CENTER" spacing="12" styleClass="drop-zone,empty-drop" onMouseClicked="#selectFromDrop">
+            <StackPane styleClass="upload-circle"><SVGPath content="M12 15 V4 M7.5 8.5 L12 4 L16.5 8.5 M4 15 V18 Q4 20 6 20 H18 Q20 20 20 18 V15" styleClass="upload-icon"/></StackPane>
+            <Label text="Arrastre una ecografía aquí" styleClass="upload-title" wrapText="true"/>
+            <Label text="o haga clic para seleccionar" styleClass="body" wrapText="true"/>
+            <Label text="PNG · JPG · BMP" styleClass="formats"/>
+            <Button fx:id="exampleButton" text="Usar imagen de ejemplo" onAction="#useExample" styleClass="example-button,small" minWidth="-Infinity"/>
+          </VBox>
+          <StackPane fx:id="imageFrame" styleClass="image-frame" visible="false" managed="false">
+            <ImageView fx:id="imagePreview" preserveRatio="true" mouseTransparent="true"/>
+            <Label fx:id="imageCaption" styleClass="image-caption" StackPane.alignment="BOTTOM_LEFT" mouseTransparent="true" wrapText="true"/>
+          </StackPane>
+        </StackPane>
+        <HBox fx:id="imageActions" spacing="10" alignment="CENTER_RIGHT" styleClass="image-actions"><Button fx:id="selectButton" text="Seleccionar archivo" onAction="#selectImage" styleClass="secondary" minWidth="-Infinity"/><Button fx:id="diagnoseButton" text="Diagnosticar" onAction="#diagnose" styleClass="primary" minWidth="-Infinity" disable="true"/></HBox>
+      </VBox>
+      <VBox fx:id="resultCard" styleClass="diagnostic-card" minWidth="0" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true">
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="card-heading"><Label text="Resultado" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><HBox fx:id="stateChip" spacing="6" alignment="CENTER" styleClass="state-chip" maxHeight="-Infinity"><Circle fx:id="stateDot" radius="3"/><Label fx:id="stateText" text="Sin resultado"/></HBox></HBox>
+        <StackPane fx:id="resultBody" VBox.vgrow="ALWAYS">
+          <VBox fx:id="emptyResult" alignment="CENTER" spacing="14" styleClass="empty-result">
+            <VBox spacing="10" maxWidth="220" prefWidth="220" styleClass="decorative-bars">
+              <HBox spacing="10" alignment="CENTER_LEFT"><Circle radius="4" fill="#D63A8A" opacity="0.55"/><Region styleClass="decorative-track" HBox.hgrow="ALWAYS"/></HBox>
+              <HBox spacing="10" alignment="CENTER_LEFT"><Circle radius="4" fill="#F4B942" opacity="0.55"/><Region styleClass="decorative-track" HBox.hgrow="ALWAYS"/></HBox>
+              <HBox spacing="10" alignment="CENTER_LEFT"><Circle radius="4" fill="#2EC4B6" opacity="0.55"/><Region styleClass="decorative-track" HBox.hgrow="ALWAYS"/></HBox>
+            </VBox>
+            <Label text="Sin resultado" styleClass="section-title"/>
+            <Label text="Cargue una ecografía y presione «Diagnosticar» para obtener la probabilidad de cada clase." styleClass="body" maxWidth="300" wrapText="true" textAlignment="CENTER" alignment="CENTER"/>
+          </VBox>
+          <VBox fx:id="readyResult" alignment="CENTER_LEFT" spacing="16" styleClass="ready-result" visible="false" managed="false">
+            <Label fx:id="readyTitle" text="Imagen lista para el análisis" styleClass="section-title" wrapText="true"/>
+            <Label fx:id="readyDescription" text="Presione «Diagnosticar» para ejecutar el Modelo B sobre la imagen cargada." styleClass="body" wrapText="true"/>
+            <VBox styleClass="metadata-table">
+              <HBox spacing="12" alignment="CENTER_LEFT" styleClass="metadata-row,metadata-divider"><Label text="Archivo" styleClass="metadata-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="readyFile" styleClass="metadata-value" wrapText="true" minWidth="0"/></HBox>
+              <HBox spacing="12" alignment="CENTER_LEFT" styleClass="metadata-row"><Label text="Modelo" styleClass="metadata-key"/><Region HBox.hgrow="ALWAYS"/><Label text="B · EfficientNetB0" styleClass="metadata-value" minWidth="-Infinity"/></HBox>
+            </VBox>
+          </VBox>
+          <VBox fx:id="finalResult" spacing="18" styleClass="final-result" visible="false" managed="false">
+            <HBox alignment="BOTTOM_LEFT" spacing="16">
+              <VBox spacing="10"><Label text="CLASE PREDICHA" styleClass="eyebrow"/><StackPane><Region fx:id="badgeHalo" styleClass="badge-halo" mouseTransparent="true"/><HBox fx:id="winnerBadge" alignment="CENTER" spacing="8" styleClass="winner-badge"><Circle fx:id="winnerDot" radius="4" opacity="0.7"/><Label fx:id="winnerName"/></HBox></StackPane></VBox>
+              <Region HBox.hgrow="ALWAYS"/>
+              <VBox alignment="BOTTOM_RIGHT" spacing="2"><HBox spacing="4" alignment="BASELINE_RIGHT"><Label fx:id="winningProbability" styleClass="probability-number" minWidth="-Infinity"/><Label text="\%" styleClass="percent-sign"/></HBox><Label text="probabilidad" styleClass="probability-caption"/></VBox>
+            </HBox>
+            <VBox fx:id="probabilityRows" spacing="14"/>
+            <GridPane styleClass="metadata-table"><columnConstraints><ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/></columnConstraints>
+              <VBox spacing="3" styleClass="data-cell,data-separator"><Label text="Tiempo de inferencia" styleClass="data-key"/><Label fx:id="inferenceTime" styleClass="data-value"/></VBox>
+              <VBox spacing="3" styleClass="data-cell" GridPane.columnIndex="1"><Label text="Modelo" styleClass="data-key"/><Label text="B · EfficientNetB0" styleClass="data-model" wrapText="true"/></VBox>
+            </GridPane>
+            <HBox fx:id="lowConfidence" alignment="CENTER_LEFT" spacing="10" styleClass="low-confidence" visible="false" managed="false"><SVGPath content="M12 3 L22 20 H2 Z M12 10 V14 M12 17 V17.5" styleClass="low-confidence-icon"/><TextFlow HBox.hgrow="ALWAYS"><Text text="Confianza baja: " styleClass="low-confidence-title"/><Text text="se recomienda la revisión del especialista" styleClass="low-confidence-text"/></TextFlow></HBox>
+            <Region VBox.vgrow="ALWAYS"/>
+            <HBox spacing="10" alignment="CENTER_LEFT"><Button fx:id="exportButton" text="Exportar resultado" onAction="#exportResult" styleClass="accent-outline" minWidth="-Infinity"><graphic><SVGPath content="M12 4 V15 M7.5 10.5 L12 15 L16.5 10.5 M4 17 V18 Q4 20 6 20 H18 Q20 20 20 18 V17" styleClass="export-icon"/></graphic></Button><Button text="Nuevo análisis" onAction="#reset" styleClass="ghost" minWidth="-Infinity"/></HBox>
+          </VBox>
+        </StackPane>
+      </VBox>
+    </GridPane>
+  </VBox>
+</ScrollPane>

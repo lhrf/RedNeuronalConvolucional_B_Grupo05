@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.shape.Circle?>
+<fx:root type="VBox" xmlns:fx="http://javafx.com/fxml" spacing="7" minWidth="0">
+  <HBox spacing="8" alignment="CENTER_LEFT"><Circle fx:id="dot" radius="4"/><Label fx:id="className" styleClass="probability-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="percentage" styleClass="probability-value" minWidth="-Infinity"/></HBox>
+  <StackPane fx:id="track" styleClass="probability-track" alignment="CENTER_LEFT"><Region fx:id="fill" styleClass="probability-fill" minWidth="4"/></StackPane>
+</fx:root>

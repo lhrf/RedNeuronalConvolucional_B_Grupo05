@@ -1,0 +1,4 @@
+# Runtime local para cargar modelo/modelo_b_final.keras.
+# Se fija Keras 3.13.2, la versión con la que se guardó el modelo.
+tensorflow==2.21.0
+keras==3.13.2
