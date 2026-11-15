@@ -50,7 +50,9 @@ El instalador generado aparece en `instalador/`. El empaquetado incluye un runti
 
 ## Créditos
 
-Grupo 05 · Universidad Privada del Norte (UPN), Perú. Curso: Sistemas Inteligentes y Machine Learning. Docente: Marcelino Torres Villanueva.
+Grupo 05 · Universidad Privada del Norte (UPN), Perú. Curso: Sistemas Inteligentes y Machine Learning. 
+
+Docente: Marcelino Torres Villanueva.
 
 - Cano Sanchez Carlos Fabrizio Benjamin
 - Kong Morales Fernando
