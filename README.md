@@ -54,6 +54,7 @@ Grupo 05 · Universidad Privada del Norte (UPN), Perú. Curso: Sistemas Intelige
 
 Docente: Marcelino Torres Villanueva.
 
+Integrantes:
 - Cano Sanchez Carlos Fabrizio Benjamin
 - Kong Morales Fernando
 - Rodriguez Flores Luis Hernan
