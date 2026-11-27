@@ -1,29 +1,54 @@
 # CNN_B · Clasificación de ecografías mamarias
 
-Aplicación de escritorio para Windows que analiza una ecografía mamaria y estima a cuál de tres categorías pertenece: **normal**, **benigna** o **maligna**. Es el prototipo del proyecto académico «Análisis comparativo de modelos CNN para el reconocimiento de lesiones mamarias en ecografías», desarrollado en el curso Sistemas Inteligentes y Machine Learning de la Universidad Privada del Norte (UPN).
+Aplicación de escritorio para Windows que analiza una ecografía mamaria y estima a cuál de tres categorías pertenece: **benigna**, **maligna** o **normal**. Es el prototipo del proyecto académico «Análisis comparativo de modelos CNN para el reconocimiento de lesiones mamarias en ecografías», desarrollado por el Grupo 05 en el curso Sistemas Inteligentes y Machine Learning de la Universidad Privada del Norte (UPN).
 
 > **Aviso importante.** CNN_B es un prototipo académico. **No es un dispositivo médico, no tiene validación clínica y no reemplaza el criterio de un especialista.** Sus resultados no deben usarse para diagnosticar ni para decidir un tratamiento. Todo hallazgo debe confirmarse con los procedimientos clínicos habituales, como la evaluación BI-RADS y la biopsia cuando corresponda.
 
 ---
 
-## ¿Qué hace la aplicación?
+## Descarga e instalación
 
-1. El usuario carga una ecografía mamaria guardada en su computadora.
-2. Un modelo de inteligencia artificial, entrenado previamente, analiza la imagen.
-3. La aplicación muestra la categoría más probable, la probabilidad que el modelo asigna a cada categoría y el tiempo de análisis.
-4. Si la probabilidad de la categoría elegida es menor que 60 %, la aplicación muestra el aviso «Confianza baja: se recomienda la revisión del especialista».
+1. Descargue el instalador de Windows (`.exe`) desde la sección **[Releases](https://github.com/lhrf/RedNeuronalConvolucional_B_Grupo05/releases)** de este repositorio (versión **CNN_B Setup v1.0.0**).
+2. Ejecute el instalador. Requiere Windows de 64 bits y permisos de administrador.
+3. Siga los pasos del asistente, que está en español. Puede marcar la opción «Crear un acceso directo en el escritorio».
+4. Al finalizar, el asistente ofrece iniciar CNN_B. Después puede abrirla desde el menú Inicio.
 
-**Privacidad:** todo el análisis se realiza en la misma computadora. Las imágenes **no se envían a internet ni a ningún servidor externo**, y la aplicación funciona sin conexión.
+El instalador incluye todo lo necesario: su propio entorno de Java, el modelo entrenado, el servicio de análisis y tres ecografías de ejemplo. No se necesita instalar otros programas ni tener conexión a internet.
+
+**Privacidad:** todo el análisis se realiza en la misma computadora. Las imágenes **no se envían a internet ni a ningún servidor externo**.
+
+## Módulos de la aplicación
+
+| Módulo | Qué muestra |
+| --- | --- |
+| **Diagnóstico** | Carga una ecografía, ejecuta el modelo y muestra la clase predicha, la probabilidad de cada clase y el tiempo de inferencia. |
+| **Cómo analiza la red** | Una animación que resume, en cinco etapas, el recorrido de la imagen dentro del modelo: imagen, detección de rasgos, resumen, combinación y resultado. |
+| **Métricas del modelo** | El desempeño del Modelo B en las 112 ecografías de prueba: exactitud, F1 macro, AUC, sensibilidad maligna y matriz de confusión. |
+| **Acerca del proyecto** | Objetivo, conjunto de datos, método, limitaciones y créditos del Grupo 05. |
+
+## Cómo usar la aplicación
+
+1. Abra **CNN_B**. La primera carga tarda unos segundos mientras se prepara el modelo («Cargando modelo…»).
+2. En el módulo **Diagnóstico**, cargue una ecografía de una de estas formas:
+   - arrástrela a la ventana;
+   - presione **Seleccionar archivo** (formatos PNG, JPG, JPEG o BMP);
+   - presione **Usar imagen de ejemplo** para probar con las ecografías incluidas.
+3. Presione **Diagnosticar** y revise la clase predicha y la probabilidad de cada clase.
+4. Si la probabilidad de la clase predicha es menor que 60 %, la aplicación muestra el aviso **«Confianza baja: se recomienda la revisión del especialista»**. En ese caso, derive el caso a un especialista.
+5. Para documentar el resultado, presione **Exportar resultado** y guárdelo como imagen PNG.
+6. Para analizar otra imagen, presione **Nuevo análisis** o **Quitar imagen**.
+
+**Recomendación de uso:** considere el resultado como una segunda opinión automatizada con fines educativos o de investigación, nunca como el diagnóstico final.
 
 ## ¿Cómo funciona?
 
-CNN_B utiliza una **red neuronal convolucional (CNN)**, un tipo de inteligencia artificial especializado en reconocer patrones visuales. El modelo, llamado **Modelo B**, parte de **EfficientNetB0**, una red que ya había aprendido a reconocer bordes, texturas y formas en más de un millón de fotografías generales (ImageNet). Sobre esa base, el modelo se adaptó a la ecografía mamaria con 522 imágenes que especialistas habían clasificado previamente. Durante el entrenamiento se aplicaron además variaciones aleatorias a las imágenes (volteo, rotación y zoom) y la técnica Dropout, para reducir el riesgo de que el modelo memorice los ejemplos.
+CNN_B utiliza una **red neuronal convolucional (CNN)**, un tipo de inteligencia artificial especializado en reconocer patrones visuales. El modelo, llamado **Modelo B**, parte de **EfficientNetB0**, una red que ya había aprendido a reconocer bordes, texturas y formas en más de un millón de fotografías generales (ImageNet). Sobre esa base se agregaron una capa de resumen (Global Average Pooling), una capa densa de 256 neuronas y una salida de tres clases, y el modelo se adaptó a la ecografía mamaria con 522 imágenes clasificadas previamente por especialistas. Durante el entrenamiento se aplicaron variaciones aleatorias a las imágenes (volteo, rotación y zoom) y la técnica Dropout, para reducir el riesgo de que el modelo memorice los ejemplos.
 
 El modelo no «entiende» la anatomía como un médico: aprende asociaciones entre los patrones de la imagen (bordes, forma, ecogenicidad y textura) y la categoría correspondiente. Por eso puede equivocarse con imágenes distintas a las del entrenamiento, por ejemplo, de otro ecógrafo, con otra configuración o con anotaciones sobre la imagen.
 
 ## Datos de entrenamiento y evaluación
 
-Se usó el conjunto público **BUSI** (*Breast Ultrasound Images Dataset*; Al-Dhabyani et al., 2020): 780 ecografías de 600 mujeres de entre 25 y 75 años, obtenidas en el Hospital Baheya de El Cairo (Egipto) y clasificadas como normales, benignas o malignas.
+Se usó el conjunto público **BUSI** (*Breast Ultrasound Images Dataset*; Al-Dhabyani et al., 2020): 780 ecografías de 600 mujeres de entre 25 y 75 años, adquiridas en 2018 en el Hospital Baheya de El Cairo (Egipto): 437 benignas, 210 malignas y 133 normales.
 
 Antes del entrenamiento se eliminaron 34 imágenes duplicadas o con etiquetas contradictorias. Las 746 ecografías restantes se dividieron en tres grupos, con la misma proporción de cada categoría:
 
@@ -35,7 +60,7 @@ Antes del entrenamiento se eliminaron 34 imágenes duplicadas o con etiquetas co
 
 ## ¿Qué tan preciso es?
 
-Resultados del Modelo B en las 112 ecografías de prueba:
+Resultados del Modelo B en las 112 ecografías de prueba (los mismos que muestra el módulo **Métricas del modelo**):
 
 | Indicador | Resultado | Qué significa |
 | --- | --- | --- |
@@ -44,12 +69,12 @@ Resultados del Modelo B en las 112 ecografías de prueba:
 | **AUC macro** | 0.9266 | Mide la capacidad de distinguir cada categoría de las demás, en una escala de 0.5 (azar) a 1 (distinción perfecta). Un valor de 0.93 indica una buena capacidad de discriminación. |
 | **F1 macro** | 0.7635 | Combina la precisión y la sensibilidad de las tres categorías, con el mismo peso para cada una. Va de 0 a 1; un valor de 0.76 indica un desempeño aceptable, pero mejorable. |
 
-Como referencia, una CNN entrenada desde cero con los mismos datos (Modelo A) alcanzó una exactitud de 65.18 % y no detectó 12 de los 31 casos malignos. El Modelo B, que combina la transferencia de aprendizaje con el aumento de datos y Dropout, obtuvo mejores resultados en todas las métricas.
+En el proyecto, el Modelo B se comparó con una CNN entrenada desde cero con los mismos datos (Modelo A) y con un modelo de referencia que siempre predice la clase mayoritaria. El Modelo B, que combina la transferencia de aprendizaje con el aumento de datos y Dropout, superó a ambos en todas las métricas. Las cifras de los tres modelos están en `docs/metricas_test.csv` y en el notebook `docs/Notebook_Colab.ipynb`.
 
 ### Limitaciones que el especialista debe conocer
 
 - **Un solo hospital y pocas imágenes de prueba:** los resultados podrían ser distintos con pacientes, equipos o protocolos de otros centros.
-- **Falsos negativos:** en la prueba, el modelo no detectó 4 de cada 31 casos malignos (aproximadamente 1 de cada 8).
+- **Falsos negativos:** en la prueba, el modelo no detectó 4 de 31 casos malignos (aproximadamente 1 de cada 8).
 - **Posible sobrestimación:** BUSI no identifica a qué paciente pertenece cada imagen, por lo que la división en grupos se hizo por imagen y no por paciente. Si dos ecografías de una misma paciente quedaron en grupos distintos, las métricas podrían ser algo optimistas.
 - **Las probabilidades no son certezas:** el porcentaje que muestra la aplicación no está calibrado. Un 90 % no significa que el modelo acierte 9 de cada 10 veces, y el umbral de 60 % del aviso de confianza baja se fijó de forma práctica, no clínica.
 - **Acepta cualquier imagen:** la aplicación no verifica que la imagen sea una ecografía mamaria. Si recibe una mamografía o una fotografía, igual le asigna una categoría, y ese resultado no tiene validez.
@@ -57,30 +82,19 @@ Como referencia, una CNN entrenada desde cero con los mismos datos (Modelo A) al
 - **Calidad de la imagen:** las imágenes borrosas, recortadas o con marcas, mediciones o texto superpuesto pueden alterar el resultado.
 - **Una imagen a la vez:** no analiza estudios completos ni compara con estudios anteriores.
 
-## Cómo usar la aplicación
-
-1. Ejecute el instalador (`.exe`) y siga los pasos en pantalla. No necesita instalar otros programas.
-2. Abra **CNN_B** desde el menú Inicio o desde el acceso directo del escritorio. La primera carga puede tardar unos segundos mientras se prepara el modelo.
-3. Entre al módulo de diagnóstico y arrastre una ecografía a la ventana o selecciónela desde el explorador de archivos (formatos PNG, JPG, JPEG o BMP).
-4. Presione **Diagnosticar** y revise la categoría más probable y la probabilidad de cada categoría.
-5. Si aparece el aviso de confianza baja, derive el caso a la revisión de un especialista.
-6. Si necesita documentar el resultado, expórtelo como imagen PNG.
-
-Para probar la aplicación sin imágenes propias, la carpeta `modelo/ecografias_prueba/` contiene ecografías de ejemplo del grupo de prueba.
-
-**Recomendación de uso:** considere el resultado como una segunda opinión automatizada con fines educativos o de investigación, nunca como el diagnóstico final.
-
 ---
 
 ## Información técnica (para desarrolladores)
 
-### Requisitos para ejecutar desde el código fuente
+### Arquitectura de la aplicación
 
-- Windows de 64 bits
-- JDK 25
-- Python 3.13
+- **Interfaz:** JavaFX 27 (Java 25), con pantallas definidas en archivos FXML.
+- **Inferencia:** al iniciar, la aplicación lanza un proceso local de Python (`backend/servidor_modelo.py`) que carga una sola vez `modelo/modelo_b_final.keras` con TensorFlow y responde cada predicción mediante mensajes JSON por la entrada y la salida estándar. No se abre ningún puerto de red.
+- **Métricas:** el módulo de métricas lee la fila del Modelo B en `docs/metricas_test.csv`.
 
-Desde PowerShell, en la carpeta raíz del proyecto:
+### Ejecutar desde el código fuente
+
+Requisitos: Windows de 64 bits, JDK 25 y Python 3.13. Desde PowerShell, en la carpeta raíz del proyecto:
 
 ```powershell
 py -3.13 -m venv backend/.venv
@@ -89,33 +103,35 @@ $env:JAVA_HOME = 'C:\Program Files\Java\jdk-25.0.3'
 .\mvnw.cmd clean javafx:run
 ```
 
-La interfaz está hecha con JavaFX. Al iniciar, un proceso local de Python (TensorFlow) carga una sola vez el modelo `modelo/modelo_b_final.keras` y atiende todas las predicciones en el mismo equipo.
+`backend/requirements.txt` fija TensorFlow 2.21.0 y Keras 3.13.2, la versión con la que se guardó el modelo.
+
+Para comprobar el modelo sin abrir la interfaz, ejecute el script de prueba, que clasifica las tres ecografías de ejemplo e imprime sus probabilidades:
+
+```powershell
+backend/.venv/Scripts/python.exe backend/probar_modelo.py
+```
 
 ### Crear el instalador de Windows
 
-Instale JDK 25, Python 3.13 e Inno Setup 6. Luego, en PowerShell:
+Instale JDK 25, Python 3.13 e Inno Setup 6 (`winget install JRSoftware.InnoSetup`). Luego, en PowerShell:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/build-installer.ps1
 ```
 
-El instalador se genera en la carpeta `instalador/`. Incluye su propio entorno de Java, el modelo y el servicio de análisis con TensorFlow, por lo que el usuario final no necesita instalar nada más. La creación puede tardar varios minutos y requiere varios GB de espacio temporal en disco.
-
-### Métricas y notebook
-
-- `docs/metricas_test.csv`: métricas del modelo de referencia y de los modelos A y B en el grupo de prueba.
-- `docs/Notebook_Colab.ipynb`: copia del notebook `Proyecto_CNN_BUSI_v2.ipynb`, con la depuración de datos, el entrenamiento y la evaluación de ambos modelos.
-- Notebook en Google Colab: https://colab.research.google.com/drive/1-V-ms5fIJBEhuZEeNmFVsqAGuTB6aNNG?usp=sharing
+El script empaqueta el backend de TensorFlow con PyInstaller, crea la imagen de la aplicación con jlink y jpackage, y compila el instalador con Inno Setup (`tools/CNN_B-Setup.iss`). El resultado, `CNN_B-Instalador-1.0.0-x64.exe`, se guarda en la carpeta `instalador/`. La creación puede tardar varios minutos y requiere varios GB de espacio temporal en disco.
 
 ### Estructura del proyecto
 
-| Carpeta | Contenido |
+| Ruta | Contenido |
 | --- | --- |
-| `src/` | Aplicación JavaFX y pantallas (archivos FXML). |
-| `backend/` | Servicio local de análisis en Python y sus dependencias. |
-| `modelo/` | Modelo entrenado y ecografías de ejemplo. |
-| `docs/` | Métricas de prueba y notebook de entrenamiento. |
-| `tools/` | Herramientas de captura y script para crear el instalador. |
+| `src/` | Aplicación JavaFX: controladores Java, pantallas FXML y estilos CSS. |
+| `backend/` | Servicio local de inferencia (`servidor_modelo.py`), script de prueba (`probar_modelo.py`) y dependencias. |
+| `modelo/` | Modelo entrenado (`modelo_b_final.keras`) y tres ecografías de ejemplo (benigna, maligna y normal) del grupo de prueba. |
+| `docs/` | Métricas de prueba (`metricas_test.csv`) y notebook de entrenamiento y evaluación (`Notebook_Colab.ipynb`). |
+| `tools/` | Script y configuración del instalador, recursos gráficos del asistente y una herramienta para generar capturas de pantalla de la aplicación. |
+
+El notebook también está disponible en Google Colab: https://colab.research.google.com/drive/1-V-ms5fIJBEhuZEeNmFVsqAGuTB6aNNG?usp=sharing
 
 ---
 
